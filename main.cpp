@@ -244,6 +244,10 @@ struct Game
       {
         window.close();
       }
+      if (evnt.type == sf::Event::Resized) {
+        sf::FloatRect newView(0,0,evnt.size.width, evnt.size.height);
+        window.setView(sf::View(newView));
+      }
       if (evnt.type == sf::Event::TextEntered)
       {
         char letter = static_cast<char>(evnt.text.unicode);
