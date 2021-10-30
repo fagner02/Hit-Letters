@@ -2,7 +2,17 @@
 #include <SFML/System.hpp>
 #include <ctime>
 #include <iostream>
+/*
+windres src\rsrc.rc -O coff -o rsrc.res
+windres src\rsrc.rc -O coff -o rsrc.res
+g++ -LC:\SFML-2.5.1\lib -o main.exe -lmingw32 -lsfml-graphics -lsfml-window -lsfml-system -lsfml-main -mwindows
+*/
 
+
+/*
+g++ -IC:\SFML-2.5.1\include -c main.cpp
+g++ -LC:\SFML-2.5.1\lib .\main.o -o main.exe -lmingw32 -lsfml-graphics -lsfml-window -lsfml-system -lsfml-main -mwindows src\rsrc.res
+*/
 struct Text
 {
   sf::RenderWindow& window;
@@ -14,7 +24,7 @@ struct Text
   Text(sf::RenderWindow& window, std::string fontPath = "src/CozetteVector.ttf") :
     window(window)
   {
-    if (!font.loadFromFile(fontPath) {
+    if (!font.loadFromFile(fontPath)) {
       std::cout << "error: loading font was not possible";
     }
     txt.setFont(font);
@@ -22,7 +32,7 @@ struct Text
   }
 
   void draw(std::string str, int fontSize, sf::Color fontColor, int x, int y,
-  bool setOrigin = false, sf::Vector2f origin(0, 0))
+  bool setOrigin = false, sf::Vector2f origin = sf::Vector2f (0, 0))
   {
     if(setOrigin) {
       txt.setOrigin(origin.x, origin.y);
@@ -46,7 +56,7 @@ struct Bubble
   char letter;
   float speed;
   bool alive = true;
-  
+
   Bubble(float x, float y, char letter, float speed = 1) :
     x (x), y (y), letter (letter), speed (speed) {
   }
@@ -63,9 +73,9 @@ struct Bubble
     circle.setPosition(x, y);
     circle.setFillColor(sf::Color::White);
     window.draw(circle);
-    
+
     txt.draw(std::string(1, letter), Bubble::radius, sf::Color::Black, x + Bubble::radius, y + Bubble::radius);
-    
+
     update();
   }
 };
@@ -86,7 +96,7 @@ struct Board
     txt(window)
   {
     txt.txt.setCharacterSize(20);
-    sf::FloatRect bounds = txt.txt.getBounds();
+    sf::FloatRect bounds = txt.txt.getLocalBounds();
     sf::RectangleShape temp(sf::Vector2f(
       bounds.height, bounds.height));
     for (int i = 0; i < misses; i++)
@@ -118,21 +128,21 @@ struct Board
         }
       }
     }
-    
+
     hitKey = false;
 
     txt.draw("Life: ", 20, sf::Color::White, 10, 10, true);
-    
+
     sf::FloatRect bounds = txt.txt.getLocalBounds();
-    
+
     float gap = bounds.height + 5;
-    
+
     txt.draw("Score: " + std::to_string(hits), 20, sf::Color::White, 10, 10 + gap, true);
     txt.draw("Active bubbles: " + std::to_string(bubbles.size()), 20, sf::Color::White, 10, 10 + gap * 2, true);
-    
+
     for (int i = 0; i < misses; i++) {
       lifePoints[i].setPosition(10 + bounds.width + 5, 10);
-      lifePoints[i].move(gap) * i, 0);
+      lifePoints[i].move((gap) * i, 0);
       window.draw(lifePoints[i]);
     }
   }
@@ -225,6 +235,7 @@ struct Game
 {
   sf::RenderWindow window;
   Board board;
+ // auto drawFunc;
   EndScreen endScreen;
   Game() :
     window(sf::VideoMode(840, 600),
@@ -232,6 +243,9 @@ struct Game
     board(window),
     endScreen(window)
   {
+    sf::Image icon;
+    icon.loadFromFile("src\\icon.png");  
+    window.setIcon(256, 256, icon.getPixelsPtr());
     window.setFramerateLimit(50);
   }
 
@@ -247,6 +261,7 @@ struct Game
       if (evnt.type == sf::Event::Resized) {
         sf::FloatRect newView(0,0,evnt.size.width, evnt.size.height);
         window.setView(sf::View(newView));
+        endScreen.sqr.setSize(sf::Vector2f(evnt.size.width, evnt.size.height));
       }
       if (evnt.type == sf::Event::TextEntered)
       {
@@ -266,11 +281,15 @@ struct Game
     if (board.misses <= 0)
     {
       endScreen.draw();
-      if (endScreen.done)
-      {
+      if (endScreen.done) {
+
       }
     }
     window.display();
+  }
+
+  void drawEnd() {
+    endScreen.draw();
   }
 
   void mainLoop()
