@@ -1,17 +1,6 @@
-#pragma once
-
 #ifndef _resources_rc
-
 #define _resources_rc
 
 MAINICON ICON "icon.ico"
 
 #endif // _resources_rc
-
-/*
-
-windres my.rc -O coff -o my.res
-
-g++ -o my_app obj.o my.res
-
-*/
