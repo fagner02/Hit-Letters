@@ -2,10 +2,7 @@
 #include <SFML/System.hpp>
 #include <ctime>
 #include <iostream>
-/*
-g++ -IC:\SFML-2.5.1\include -c main.cpp
-g++ -LC:\SFML-2.5.1\lib .\main.o -o main.exe -lmingw32 -lsfml-graphics -lsfml-window -lsfml-system -lsfml-main -mwindows src\rsrc.res
-*/
+
 struct Text {
   sf::RenderWindow& window;
   sf::Text txt;
