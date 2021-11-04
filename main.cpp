@@ -67,7 +67,7 @@ struct Board {
 	std::vector<Bubble> bubbles;
 	std::vector<sf::RectangleShape> lifePoints;
 	int hits = 0;
-	int misses = 5;
+	int misses = 10;
 	char input;
 	bool hitKey = false;
 	Text txt;
@@ -84,7 +84,7 @@ struct Board {
 	void addBubble() {
 		char letter = 'A' + rand() % 26;
 		float speed = (1 + rand() % 700) / 100;
-		Bubble temp(rand() % (int) window.getSize().x, -2 * Bubble::radius, letter, speed);
+		Bubble temp(rand() % (window.getSize().x - Bubble::radius), -2 * Bubble::radius, letter, speed);
 		bubbles.push_back(temp);
 	}
 
@@ -153,7 +153,7 @@ struct EndScreen {
 	sf::RectangleShape sqr;
 	bool sqrSet = false;
 	bool done = false;
-	std::string targetString = "game over";
+	std::string targetString = "acabou meu repertorio";
 	std::string currentString = "";
 	Text txt;
 	EndScreen(sf::RenderWindow& window) : window(window), sqr(sf::Vector2f((float) window.getSize().x, (float) window.getSize().y)), txt(window) {
@@ -215,6 +215,7 @@ struct Game {
 			}
 			if(evnt.type == sf::Event::TextEntered) {
 				if(endScreen.done) {
+					Board temp(window);
 					new (&board) Board(window);
 					new (&endScreen) EndScreen(window);
 				} else {
