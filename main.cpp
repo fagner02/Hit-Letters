@@ -153,7 +153,7 @@ struct EndScreen {
 	sf::RectangleShape sqr;
 	bool sqrSet = false;
 	bool done = false;
-	std::string targetString = "acabou meu repertorio";
+	std::string targetString = "game over";
 	std::string currentString = "";
 	Text txt;
 	EndScreen(sf::RenderWindow& window) : window(window), sqr(sf::Vector2f((float) window.getSize().x, (float) window.getSize().y)), txt(window) {
